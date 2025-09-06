@@ -139,7 +139,7 @@ public class ElevatorIOReal implements ElevatorIO {
             inputs.elevatorHeightMeters = elevatorPos.getValue().getValue() * (WHEEL_CIRCUMFERENCE_METERS / GEAR_RATIO);
             inputs.currentAmps = new double[] {elevatorCurrent.getValue().getValue()};
             inputs.tempF = new double[] { (elevatorTemp.getValue().getValue() * 9.0/5.0) + 32.0 };
-            
+
 
     }
 
