@@ -18,7 +18,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class OneMotorElevator extends SubsystemBase {
+public class ElevatorIOReal implements ElevatorIO {
     private final TalonFX elevatorMotor;
     private final TalonFXConfiguration motorConfig;
 
@@ -35,7 +35,7 @@ public class OneMotorElevator extends SubsystemBase {
     private double setpointVolts;
     private double setpointMeters;
     
-    public OneMotorElevator() {
+    public Elevator() {
         elevatorMotor = new TalonFX(15, "rio"); // Adjust CAN ID as needed
         motorConfig = new TalonFXConfiguration();
         
@@ -124,6 +124,23 @@ public class OneMotorElevator extends SubsystemBase {
             configs.MotionMagicJerk = 10000;
         }
         elevatorMotor.getConfigurator().apply(configs);
+    }
+
+    public void updateInputs(ElevatorIOInputs inputs){
+        BaseStatusSignal.refreshAll(
+            elevatorCurrent
+            elevatorTemp,
+            elevatorAngularVelocity,
+            motorVoltage,
+            elevatorPos);
+
+            inputs.setpointMeters = this.setpointMeters;
+            inputs.elevatorVelMPS = elevatorAngularVelocity.getValue().getValue() * (WHEEL_CIRCUMFERENCE_METERS / GEAR_RATIO) / 60.0;
+            inputs.elevatorHeightMeters = elevatorPos.getValue().getValue() * (WHEEL_CIRCUMFERENCE_METERS / GEAR_RATIO);
+            inputs.currentAmps = new double[] {elevatorCurrent.getValue().getValue()};
+            inputs.tempF = new double[] { (elevatorTemp.getValue().getValue() * 9.0/5.0) + 32.0 };
+
+
     }
 
 
